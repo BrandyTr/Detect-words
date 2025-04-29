@@ -1,12 +1,13 @@
 import sys
 from config import ANTLR_JAR
-from grammar_utils import get_words_from_terminal
+from grammar_utils import get_words_from_terminal, resetGrammarFile
 from antlr_utils import generateAntlr2Python
 from test_runner import runTest
 
 def printUsage():
     print('python run.py gen')
-    print('python run.py test')
+    print('python run.py test')    
+    print('python run.py reset')
 
 def printBreak():
     print('-----------------------------------------------')
@@ -23,6 +24,8 @@ def main(argv):
         generateAntlr2Python(words)    
     elif argv[0] == 'test':
         runTest()  # Pass an empty list to use the default behavior
+    elif argv[0] == 'reset':
+        resetGrammarFile()
     else:
         printUsage()
 
