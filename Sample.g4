@@ -4,7 +4,7 @@ program: statement;
 
 statement: expr;
 
-expr: 'banana';
+expr: 'banana' | 'duma' | 'dume' | 'ngu';
 
 ID: [a-zA-Z]+;
 INT: [0-9]+;
