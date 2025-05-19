@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+  
+  --color-primary-darkBlue: #024c89;
+  --color-primary-lightestBlue: #e9f6ff;
+  --color-primary-lightBlue: #c1e5ff;
+  --color-white: #ffffff;
+  --color-beggie: #FFF5EB;
+  --color-gray: #B4B4B4;
+  --color-beggieDark: #FFF6E3;
+
+  /* Color gradient */
+  --gradient-blue: linear-gradient(90deg, #E9F6FF, #C1E5FF); 
+  --gradient-green: linear-gradient(90deg, #14ab58 27.89%, #0e8845);
+  --gradient-red: linear-gradient(90deg, #b31414 32.21%, #970f0f);
+  --gradient-orange: linear-gradient(90deg, #f9b42b 17.31%, #f48611 90.39%);
+  --gradient-grey : linear-gradient(90deg, #bbb7b7, #8b8888);
+  --gradient-blueDark: linear-gradient(90deg, #03abfd, #037ab4);
+
+  /* Effect */
+  --btn-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.bg-gradient-blue {
+  background-image: var(--gradient-blue);
+
+}
+
+.bg-gradient-green {
+  background-image: var(--gradient-green);
+}
+
+.bg-gradient-red {
+  background-image: var(--gradient-red);
+}
+
+.bg-gradient-orange {
+  background-image: var(--gradient-orange);
+}
+
+.bg-gradient-grey {
+  background-image: var(--gradient-grey);
+}
+
+.bg-gradient-blueDark {
+  background-image: var(--gradient-blueDark);
+}
+
+/* a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */
