@@ -1,8 +1,9 @@
-/* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+html, body, #root {
+  min-width: 420px !important;
+  width: 420px !important;
+  max-width: 420px !important;
+  margin: 0;
+  padding: 0;
 }
 
 .logo {
@@ -39,4 +40,4 @@
 
 .read-the-docs {
   color: #888;
-} */
+} 
