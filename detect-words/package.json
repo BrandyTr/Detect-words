@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "start":"vite",
     "dev": "nodemon --watch ./src --ext ts,tsx,js,jsx,css --exec \"npm run build\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
