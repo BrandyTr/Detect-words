@@ -1,15 +1,19 @@
 {
-    "manifest_version": 3,
-    "name": "Detect Bad Words",
-    "version": "1.0.0",
-    "action": {
-        "default_popup": "index.html"
-    },
-    "permissions": [
-        "scripting"
-    ],
-    "host_permissions": [
-        "http://*/*",
-        "https://*/*"
-    ]
+  "manifest_version": 3,
+  "name": "Detect Bad Words",
+  "version": "1.0.0",
+  "action": {
+    "default_popup": "index.html"
+  },
+  "permissions": ["activeTab","scripting"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "host_permissions": ["http://*/*", "https://*/*"]
 }

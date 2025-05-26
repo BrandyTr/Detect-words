@@ -1,10 +1,19 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-
-// https://vite.dev/config/
 export default defineConfig({
-  plugins: [
-    react(),
-  ],
-})
+  plugins: [react()],
+  build: {
+    outDir: 'dist',
+    rollupOptions: {
+      input: {
+        popup: 'index.html', // Vite automatically looks in root
+        background: 'src/scripts/background.js',
+        content: 'src/scripts/content.js',
+      },
+      output: {
+        entryFileNames: '[name].js' // prevent hashed names (optional)
+      }
+    }
+  }
+});

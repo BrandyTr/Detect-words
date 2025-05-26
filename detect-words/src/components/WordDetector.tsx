@@ -54,8 +54,19 @@ export default function WordDetector() {
             setShowGenerated(false);
         }
     };
+    const handleHideWords = async () => {
+    const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
+    if (allWords.length === 0) return;
 
-    // Khi nhấn Save generated words: lưu từ và các biến thể vào danh sách đã lưu
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+    chrome.runtime.sendMessage({
+        action: "injectAndHide",
+        tabId: tab.id,
+        words: allWords
+    });
+};
+
     const handleSaveGenerated = () => {
         if (!word) return;
         const exist = savedWords.find(
@@ -217,7 +228,7 @@ export default function WordDetector() {
                     colorClass="bg-gradient-green"
                     name="Save"
                 />
-                <Button colorClass="bg-gradient-red" name="Hide comments" />
+                <Button id="hideWords" colorClass="bg-gradient-red" name="Hide comments" onClick={handleHideWords} />
                 <Button
                     colorClass="bg-gradient-orange"
                     name="Generate"
