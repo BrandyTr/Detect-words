@@ -28,24 +28,22 @@ export default function WordDetector() {
     const [generatedWords, setGeneratedWords] = useState<string[]>([]);
     const [mode, setMode] = useState<"main" | "list">("main");
     const [accordion, setAccordion] = useState<{ [key: string]: boolean }>({});
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-    // Load từ đã lưu từ localStorage khi mở app
     useEffect(() => {
         const stored = localStorage.getItem("savedWords_v2");
         if (stored) {
             setSavedWords(JSON.parse(stored));
-            console.log(JSON.parse(stored))
+            console.log(JSON.parse(stored));
         }
     }, []);
 
-    // Lưu vào localStorage khi savedWords thay đổi
     useEffect(() => {
         if (savedWords.length > 0) {
             localStorage.setItem("savedWords_v2", JSON.stringify(savedWords));
         }
     }, [savedWords]);
 
-    // Khi nhấn Generate: tạo biến thể và hiện frame
     const handleGenerate = () => {
         if (!showGenerated) {
             setGeneratedWords(generateVariants(word));
@@ -54,18 +52,21 @@ export default function WordDetector() {
             setShowGenerated(false);
         }
     };
+
     const handleHideWords = async () => {
-    const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
-    if (allWords.length === 0) return;
+        const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
+        if (allWords.length === 0) return;
 
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-    chrome.runtime.sendMessage({
-        action: "injectAndHide",
-        tabId: tab.id,
-        words: allWords
-    });
-};
+        chrome.runtime.sendMessage({
+            action: "injectAndHide",
+            tabId: tab.id,
+            words: allWords
+        });
+
+        setStatusMessage("Hide successfully!");
+    };
 
     const handleSaveGenerated = () => {
         if (!word) return;
@@ -92,7 +93,6 @@ export default function WordDetector() {
         setGeneratedWords([]);
     };
 
-    // Khi nhấn Save (lưu 1 từ cơ bản, không biến thể)
     const handleSaveWord = () => {
         if (!word) return;
         const exist = savedWords.find(
@@ -103,20 +103,20 @@ export default function WordDetector() {
                 ...savedWords,
                 { word, variants: [] }
             ]);
+            setStatusMessage("Save successfully!");
+        } else {
+            setStatusMessage("Duplicate words!");
         }
         setWord("");
     };
 
-    // Khi nhấn List, chuyển sang mode "list"
     const handleShowList = () => {
         setMode("list");
         setShowGenerated(false);
     };
 
-    // Khi nhấn Back, chuyển về mode "main"
     const handleBack = () => setMode("main");
 
-    // Gom từ theo alphabet cho List
     const groupedWords = ALPHABET.reduce((acc, char) => {
         acc[char] = savedWords
             .filter((item) => item.word[0]?.toLowerCase() === char)
@@ -124,12 +124,9 @@ export default function WordDetector() {
         return acc;
     }, {} as { [key: string]: WordVariants[] });
 
-    // --- PHẦN GIAO DIỆN ---
-
     if (mode === "list") {
         return (
             <div className="bg-[#e5f2fd] border border-[#90cdf4] rounded-[12px] px-6 py-6 mt-6 max-w-2xl mx-auto shadow-lg">
-                {/* Nút Back */}
                 <div className="flex items-center mb-4">
                     <button onClick={handleBack} className="mr-2 text-[22px] font-bold text-primary-darkBlue hover:bg-[#d6eaff] rounded-full px-2 py-0.5 transition">
                         ←
@@ -189,8 +186,6 @@ export default function WordDetector() {
         );
     }
 
-
-    // Giao diện mặc định (main)
     return (
         <>
             <div className="flex flex-col gap-[6px] mb-[18px]">
@@ -214,7 +209,6 @@ export default function WordDetector() {
                     />
                     <button
                         className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
-                    // ???? thêm chức năng find sau
                     >
                         Find
                     </button>
@@ -228,7 +222,12 @@ export default function WordDetector() {
                     colorClass="bg-gradient-green"
                     name="Save"
                 />
-                <Button id="hideWords" colorClass="bg-gradient-red" name="Hide comments" onClick={handleHideWords} />
+                <Button
+                    id="hideWords"
+                    colorClass="bg-gradient-red"
+                    name="Hide comments"
+                    onClick={handleHideWords}
+                />
                 <Button
                     colorClass="bg-gradient-orange"
                     name="Generate"
@@ -241,7 +240,14 @@ export default function WordDetector() {
                 />
             </div>
 
-            {/* Frame Generate (toggle) */}
+            {/* Status message */}
+            {statusMessage && (
+                <div className={`mt-2 text-[15px] font-semibold ${statusMessage.includes("successfully") ? "text-green-700" : "text-red-600"}`}>
+                    {statusMessage}
+                </div>
+            )}
+
+            {/* Frame Generate */}
             {showGenerated && (
                 <div className="bg-gradient-blue max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto">
                     <div className="font-semibold mb-2">Generated words</div>
