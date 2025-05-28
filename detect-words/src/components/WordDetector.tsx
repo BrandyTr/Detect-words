@@ -181,27 +181,31 @@ export default function WordDetector() {
                                 groupedWords[char] &&
                                 groupedWords[char].length > 0 && (
                                     <div className="pl-8 pt-1 pb-2 flex flex-wrap gap-2">
-                                        {groupedWords[char].map((w) => (
-                                            <div key={w.word} className="flex gap-2 items-center mb-1 flex-wrap">
-                                                <span className="px-3 py-1 rounded-[8px] border border-[#b0cbea] bg-white text-[15px] font-semibold relative">
-                                                  {w.word}
-                                                  <button
-                                                    onClick={() => handleDeleteWord(w.word)}
-                                                    className="absolute -top-2 -right-2 hidden group-hover:inline-block text-red-500 bg-white border border-red-200 rounded-full px-2 py-0.5 text-xs shadow hover:bg-red-100 transition"
-                                                    title="Delete word">
-                                                    🗑
-                                                  </button>
-                                                </span>
-                                                {w.variants.map((v, idx) => (
-                                                    <span
-                                                        key={idx}
-                                                        className="px-3 py-1 rounded-[8px] border border-[#c3d6f7] bg-[#f5f8fc] text-[14px] font-normal"
-                                                    >
-                                                        {v}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        ))}
+                                      {groupedWords[char].map((w) => (
+                                        <div
+                                          key={w.word}
+                                          className="flex gap-2 items-center mb-1 flex-wrap group relative"
+                                        >
+                                          <span className="px-3 py-1 rounded-[8px] border border-[#b0cbea] bg-white text-[15px] font-semibold relative">
+                                            {w.word}
+                                            <button
+                                              onClick={() => handleDeleteWord(w.word)}
+                                              className="absolute -top-2 -right-2 hidden group-hover:inline-block text-red-500 bg-white border border-red-200 rounded-full px-2 py-0.5 text-xs shadow hover:bg-red-100 transition"
+                                              title="Delete word"
+                                            >
+                                              🗑
+                                            </button>
+                                          </span>
+                                          {w.variants.map((v, idx) => (
+                                            <span
+                                              key={idx}
+                                              className="px-3 py-1 rounded-[8px] border border-[#c3d6f7] bg-[#f5f8fc] text-[14px] font-normal"
+                                            >
+                                              {v}
+                                            </span>
+                                          ))}
+                                        </div>
+                                      ))}
                                     </div>
                                 )}
                         </div>
