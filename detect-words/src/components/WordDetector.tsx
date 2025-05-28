@@ -137,6 +137,10 @@ export default function WordDetector() {
         return acc;
     }, {} as { [key: string]: WordVariants[] });
 
+    const handleDeleteWord = (wordToDelete : string) => {
+    setSavedWords((prev) => prev.filter((item) => item.word !== wordToDelete));
+    };
+
     if (mode === "list") {
         return (
             <div className="bg-[#e5f2fd] border border-[#90cdf4] rounded-[12px] px-6 py-6 mt-6 max-w-2xl mx-auto shadow-lg">
@@ -152,7 +156,7 @@ export default function WordDetector() {
                     </div>
                 </div>
                 <div className="flex flex-col gap-4">
-                    {ALPHABET.map((char) => (
+                    {ALPHABET.filter((char) => groupedWords[char] && groupedWords[char].length > 0) .map((char) =>(
                         <div key={char}>
                             <div
                                 className="flex items-center py-2 cursor-pointer select-none"
@@ -179,7 +183,15 @@ export default function WordDetector() {
                                     <div className="pl-8 pt-1 pb-2 flex flex-wrap gap-2">
                                         {groupedWords[char].map((w) => (
                                             <div key={w.word} className="flex gap-2 items-center mb-1 flex-wrap">
-                                                <span className="px-3 py-1 rounded-[8px] border border-[#b0cbea] bg-white text-[15px] font-semibold">{w.word}</span>
+                                                <span className="px-3 py-1 rounded-[8px] border border-[#b0cbea] bg-white text-[15px] font-semibold relative">
+                                                  {w.word}
+                                                  <button
+                                                    onClick={() => handleDeleteWord(w.word)}
+                                                    className="absolute -top-2 -right-2 hidden group-hover:inline-block text-red-500 bg-white border border-red-200 rounded-full px-2 py-0.5 text-xs shadow hover:bg-red-100 transition"
+                                                    title="Delete word">
+                                                    🗑
+                                                  </button>
+                                                </span>
                                                 {w.variants.map((v, idx) => (
                                                     <span
                                                         key={idx}
