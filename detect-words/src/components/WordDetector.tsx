@@ -68,6 +68,20 @@ export default function WordDetector() {
         setStatusMessage("Hide successfully!");
     };
 
+    const handleFindWords = async () => {
+        const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
+        if (allWords.length === 0) return;
+
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+        const res= await chrome.runtime.sendMessage({
+            action: "injectAndFind",
+            tabId: tab.id,
+            words: allWords
+        });
+        console.log({count:res.count})
+    }
+
     const handleSaveGenerated = () => {
         if (!word) return;
         const exist = savedWords.find(
@@ -89,7 +103,6 @@ export default function WordDetector() {
             ]);
         }
         setShowGenerated(false);
-        setWord("");
         setGeneratedWords([]);
     };
 
@@ -208,6 +221,7 @@ export default function WordDetector() {
                         className="w-[80%] px-[8px] py-[5px] font-normal rounded-tl-[5px] rounded-bl-[5px] border-t-[1.25px] border-l-[1.25px] border-b-[1.25px] border-gray"
                     />
                     <button
+                        onClick={handleFindWords}
                         className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
                     >
                         Find
