@@ -56,6 +56,11 @@ export default function WordDetector() {
     }, [statusMessage])
 
     const handleGenerate = () => {
+        if (!word.trim()) {
+            setStatusMessage("Please enter the word.");
+            return;
+        }
+
         if (!showGenerated) {
             setGeneratedWords(generateVariants(word));
             setShowGenerated(true);
@@ -114,6 +119,7 @@ export default function WordDetector() {
                 { word, variants: generatedWords },
             ]);
         }
+        setStatusMessage("Save successfully!");
         setShowGenerated(false);
         setGeneratedWords([]);
     };
@@ -208,29 +214,30 @@ export default function WordDetector() {
 
             {/* Status message */}
             {statusMessage && (
-                <div className={`mt-2 text-[15px] font-semibold ${statusMessage.includes("successfully") ? "text-green-700" : "text-red-600"}`}>
+                <div className={`mt-2 text-[15px] text-center font-semibold ${statusMessage.includes("successfully") ? "text-green-700" : "text-red-600"}`}>
                     {statusMessage}
                 </div>
             )}
 
             {/* Frame Generate */}
             {showGenerated && (
-                <div className="bg-gradient-blue max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto">
-                    <div className="font-semibold mb-2">Generated words</div>
-                    <div className="flex flex-wrap gap-2 mb-2">
+                <div className="bg-gradient-blue max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto px-4 py-4 rounded-[5px] shadow-md mx-auto">
+                    <hr className="border-gray-300 mb-3" />
+                    <div className="font-semibold text-[16px] text-black mb-2">Generated words</div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-4">
                         {generatedWords.map((gw, idx) => (
                             <input
                                 key={idx}
                                 value={gw}
                                 readOnly
-                                className="px-2 py-1 rounded bg-white border text-[12px]"
-                                style={{ minWidth: 100 }}
+                                className="px-3 py-2 rounded bg-white border text-[14px] shadow-sm w-full"
                             />
                         ))}
                     </div>
                     <Button
                         name="Save generated words"
-                        colorClass="bg-gradient-blueLight w-[100%]"
+                        colorClass="bg-gradient-blueLight w-full"
                         onClick={handleSaveGenerated}
                     />
                 </div>
