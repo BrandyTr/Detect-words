@@ -32,6 +32,7 @@
   --gradient-orange: linear-gradient(90deg, #f9b42b 17.31%, #f48611 90.39%);
   --gradient-grey : linear-gradient(90deg, #bbb7b7, #8b8888);
   --gradient-blueDark: linear-gradient(90deg, #03abfd, #037ab4);
+  --gradient-blueLight: linear-gradient(90deg, #29b6f4 27.89%, #2196f3);
 
   /* Effect */
   --btn-shadow: 1px 2px 4px rgba(0, 0, 0, 0.3);
@@ -60,6 +61,10 @@
 
 .bg-gradient-blueDark {
   background-image: var(--gradient-blueDark);
+}
+
+.bg-gradient-blueLight {
+  background-image: var(--gradient-blueLight);
 }
 
 /* a {
