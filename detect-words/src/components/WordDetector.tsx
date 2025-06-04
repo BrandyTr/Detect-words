@@ -48,7 +48,7 @@ export default function WordDetector() {
         if(statusMessage) {
             const timer = setTimeout(() => {
                 setStatusMessage(null)
-            }, 1000);
+            }, 2000);
 
             return () => clearTimeout(timer)
         }
