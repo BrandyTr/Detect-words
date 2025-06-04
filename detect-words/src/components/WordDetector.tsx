@@ -29,6 +29,7 @@ export default function WordDetector() {
     const [generatedWords, setGeneratedWords] = useState<string[]>([]);
     const [mode, setMode] = useState<"main" | "list">("main");
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
+    const [wordCount,setWordCount]=useState<number>(0)
 
     useEffect(() => {
         const stored = localStorage.getItem("savedWords_v2");
@@ -90,6 +91,7 @@ export default function WordDetector() {
             words: allWords
         });
         console.log({ count: res.count });
+        setWordCount(res.count)
     };
 
     const handleSaveGenerated = () => {
@@ -175,6 +177,7 @@ export default function WordDetector() {
                     >
                         Find
                     </button>
+                    {(wordCount>0)&&<p>{wordCount} words</p>}
                 </div>
             </div>
 

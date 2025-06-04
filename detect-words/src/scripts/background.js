@@ -25,6 +25,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       chrome.tabs.sendMessage(request.tabId, {
         action: "findMultipleWords",
         words: request.words
+      },(response)=>{
+        sendResponse(response)
       });
     });
     return true; 
