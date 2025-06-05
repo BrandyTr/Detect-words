@@ -85,15 +85,14 @@ export default function WordDetector() {
     };
 
     const handleFindWords = async () => {
-        const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
-        if (allWords.length === 0) return;
+
 
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
         const res = await chrome.runtime.sendMessage({
             action: "injectAndFind",
             tabId: tab.id,
-            words: allWords
+            words: [word]
         });
         console.log({ count: res.count });
         setWordCount(res.count)

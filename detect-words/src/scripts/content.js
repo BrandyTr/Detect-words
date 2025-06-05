@@ -36,11 +36,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
     walk(document.body);
     sendResponse({ success: true });
-    return true
+    return true;
   }
   if (request.action === "findMultipleWords") {
     const words = request.words;
-    let count=0;
+    let count = 0;
 
     if (!Array.isArray(words) || words.length === 0) return;
 
@@ -54,7 +54,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (node.nodeType === 3) {
         const matches = node.textContent.match(regex);
         if (matches) {
-          count+=matches.length
+          count += matches.length;
+          const span = document.createElement("span");
+          span.innerHTML = node.textContent.replace(
+            regex,
+            (match) => `<mark>${match}</mark>`
+          );
+          node.parentNode.replaceChild(span, node);
         }
       } else if (
         node.nodeType === 1 &&
@@ -68,8 +74,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     }
 
     walk(document.body);
-    console.log({count})
+    console.log({ count });
     sendResponse({ count });
-    return true
+    return true;
   }
 });
