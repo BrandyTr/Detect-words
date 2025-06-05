@@ -16,12 +16,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (node.nodeType === 3) {
         const matches = node.textContent.match(regex);
         if (matches) {
-          const span = document.createElement("span");
-          span.innerHTML = node.textContent.replace(
-            regex,
-            (match) => `<s>${match}</s>`
-          );
-          node.parentNode.replaceChild(span, node);
+           node.parentNode.style.display = "none";
         }
       } else if (
         node.nodeType === 1 &&
