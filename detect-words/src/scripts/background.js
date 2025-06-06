@@ -45,6 +45,21 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true;
   }
+    else if (request.action === "unhideWord") {
+    console.log("Reach unhideWord");
+    chrome.scripting.executeScript({
+      target: {tabId: request.tabId},
+      files: ["content.js"]
+    }, () => {
+      chrome.tabs.sendMessage(request.tabId, {
+        action: "unhideWord",
+        word: request.word
+      }, () => {
+        sendResponse({success: true})
+      })
+    })
+    return true
+  }
 });
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === 'complete') {
