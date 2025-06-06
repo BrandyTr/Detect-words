@@ -29,7 +29,7 @@ export default function WordDetector() {
     const [generatedWords, setGeneratedWords] = useState<string[]>([]);
     const [mode, setMode] = useState<"main" | "list">("main");
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
-    const [wordCount, setWordCount] = useState<number>(0)
+    const [wordCount,setWordCount]=useState<number>(0)
 
     useEffect(() => {
         const stored = localStorage.getItem("savedWords_v2");
@@ -41,13 +41,13 @@ export default function WordDetector() {
     useEffect(() => {
         if (savedWords.length > 0) {
             localStorage.setItem("savedWords_v2", JSON.stringify(savedWords));
-            chrome.storage.sync.set({ savedWords_v2: savedWords });
+            chrome.storage.sync.set({ savedWords_v2: savedWords }); 
         }
     }, [savedWords]);
 
     // auto-disappear statusMesage after 3s
     useEffect(() => {
-        if (statusMessage) {
+        if(statusMessage) {
             const timer = setTimeout(() => {
                 setStatusMessage(null)
             }, 2000);
@@ -90,17 +90,11 @@ export default function WordDetector() {
 
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
-        await chrome.runtime.sendMessage({
-            action: "clearHighlights",
-            tabId: tab.id,
-        })
-
         const res = await chrome.runtime.sendMessage({
             action: "injectAndFind",
             tabId: tab.id,
             words: [word]
         });
-
         console.log({ count: res.count });
         setWordCount(res.count)
     };
@@ -155,14 +149,7 @@ export default function WordDetector() {
     const handleBack = () => setMode("main");
 
     const handleDeleteWord = (wordToDelete: string) => {
-        setSavedWords((prev) => {
-            const updatedWords = prev.filter((item) => item.word !== wordToDelete)
-            chrome.storage.sync.set({ savedWords_v2: updatedWords });
-                    document.querySelectorAll('[data-original-display]').forEach((el) => {
-              const htmlEl = el as HTMLElement; 
-  htmlEl.style.display = htmlEl.dataset.originalDisplay || '';
-        });
-        });
+        setSavedWords((prev) => prev.filter((item) => item.word !== wordToDelete));
     };
 
     if (mode === "list") {
@@ -182,25 +169,21 @@ export default function WordDetector() {
                         </div>
                     </span>
                 </label>
-
-                {/* User input */}
-                <div className="w-full flex flex-col gap-2">
-                    <div className="flex overflow-hidden">
-                        <input
-                            type="text"
-                            placeholder="Eg: banana"
-                            value={word}
-                            onChange={(e) => setWord(e.target.value)}
-                            className="w-[80%] px-[8px] py-[5px] font-normal rounded-tl-[5px] rounded-bl-[5px] border-t-[1.25px] border-l-[1.25px] border-b-[1.25px] border-gray"
-                        />
-                        <button
-                            onClick={handleFindWords}
-                            className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
-                        >
-                            Find
-                        </button>
-                    </div>
-                    {(wordCount>0)&&<p className="text-primary-darkBlue text-[12px] font-medium">{wordCount} words</p>}
+                <div className="w-full flex overflow-hidden">
+                    <input
+                        type="text"
+                        placeholder="Eg: banana"
+                        value={word}
+                        onChange={(e) => setWord(e.target.value)}
+                        className="w-[80%] px-[8px] py-[5px] font-normal rounded-tl-[5px] rounded-bl-[5px] border-t-[1.25px] border-l-[1.25px] border-b-[1.25px] border-gray"
+                    />
+                    <button
+                        onClick={handleFindWords}
+                        className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
+                    >
+                        Find
+                    </button>
+                    {(wordCount>0)&&<p>{wordCount} words</p>}
                 </div>
             </div>
 
@@ -238,7 +221,7 @@ export default function WordDetector() {
 
             {/* Frame Generate */}
             {showGenerated && (
-                <div className=" max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto rounded-[5px] mt-4 mx-auto">
+                <div className="bg-gradient-blue max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto px-4 py-4 rounded-[5px] shadow-md mx-auto">
                     <hr className="border-gray-300 mb-3" />
                     <div className="font-semibold text-[16px] text-black mb-2">Generated words</div>
 

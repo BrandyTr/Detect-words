@@ -16,7 +16,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       if (node.nodeType === 3) {
         const matches = node.textContent.match(regex);
         if (matches) {
-           node.parentNode.style.display = "none";
+          const container = node.parentNode.closest("div") || node.parentNode;
+          if (!container.dataset.originalDisplay) {
+            container.dataset.originalDisplay = container.style.display || "";
+          }
+          container.style.display = "none";
         }
       } else if (
         node.nodeType === 1 &&
@@ -102,8 +106,11 @@ function hideWords(words) {
     if (node.nodeType === 3) {
       const matches = node.textContent.match(regex);
       if (matches) {
-        const container = node.parentNode.closest('div') || node.parentNode;
-        container.style.display = "none"; 
+        const container = node.parentNode.closest("div") || node.parentNode;
+        if (!container.dataset.originalDisplay) {
+          container.dataset.originalDisplay = container.style.display || ""; // Save original display
+        }
+        container.style.display = "none";
       }
     } else if (
       node.nodeType === 1 &&
@@ -132,11 +139,10 @@ function hideWords(words) {
   observer.observe(document.body, { childList: true, subtree: true });
 }
 
-// 🧠 Khi content.js load, tự lấy từ storage
-chrome.storage.sync.get(['savedWords_v2'], (result) => {
+chrome.storage.sync.get(["savedWords_v2"], (result) => {
   const savedWords = result.savedWords_v2 || [];
-  const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
-  
+  const allWords = savedWords.flatMap((w) => [w.word, ...w.variants]);
+
   if (allWords.length > 0) {
     hideWords(allWords);
   }

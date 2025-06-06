@@ -30,18 +30,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
     return true; 
-  }
-<<<<<<< HEAD
-});
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete') {
-    chrome.scripting.executeScript({
-      target: { tabId: tabId },
-      files: ["content.js"]
-    });
-=======
-
-  else if (request.action === "clearHighlights") {
+  }  else if (request.action === "clearHighlights") {
     console.log("Reach clearHighlights");
     chrome.scripting.executeScript({
       target: { tabId: request.tabId },
@@ -54,6 +43,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
       });
     });
     return true;
->>>>>>> f700d75a73d68e46614e0b72604b11bcf2383d15
   }
 });
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete') {
+    chrome.scripting.executeScript({
+      target: { tabId: tabId },
+      files: ["content.js"]
+    });
+}})
