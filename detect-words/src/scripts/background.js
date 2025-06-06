@@ -31,4 +31,19 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     });
     return true; 
   }
+
+  else if (request.action === "clearHighlights") {
+    console.log("Reach clearHighlights");
+    chrome.scripting.executeScript({
+      target: { tabId: request.tabId },
+      files: ["content.js"]
+    }, () => {
+      chrome.tabs.sendMessage(request.tabId, {
+        action: "clearHighlights"
+      }, () => {
+        sendResponse({ success: true });
+      });
+    });
+    return true;
+  }
 });

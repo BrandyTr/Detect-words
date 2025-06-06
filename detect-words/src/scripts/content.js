@@ -1,12 +1,12 @@
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Reach content.js");
   console.log({ request, words: request.words });
+
   if (request.action === "hideMultipleWords") {
     const words = request.words;
 
     if (!Array.isArray(words) || words.length === 0) return;
 
-    // Build one big regex: \b(word1|word2|word3)\b
     const escapedWords = words.map((w) =>
       w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     );
@@ -33,13 +33,13 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ success: true });
     return true;
   }
+
   if (request.action === "findMultipleWords") {
     const words = request.words;
     let count = 0;
 
     if (!Array.isArray(words) || words.length === 0) return;
 
-    // Build one big regex: \b(word1|word2|word3)\b
     const escapedWords = words.map((w) =>
       w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
     );
@@ -51,9 +51,10 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (matches) {
           count += matches.length;
           const span = document.createElement("span");
+          // hanged from <mark> to <mark class="highlighted-word"> for easier clearing
           span.innerHTML = node.textContent.replace(
             regex,
-            (match) => `<mark>${match}</mark>`
+            (match) => `<mark class="highlighted-word">${match}</mark>`
           );
           node.parentNode.replaceChild(span, node);
         }
@@ -71,6 +72,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     walk(document.body);
     console.log({ count });
     sendResponse({ count });
+    return true;
+  }
+
+  // Clear all highlights
+  if (request.action === "clearHighlights") {
+    console.log("Clearing highlights...");
+
+    const highlights = document.querySelectorAll("mark.highlighted-word");
+    highlights.forEach((highlight) => {
+      const parent = highlight.parentNode;
+      const textNode = document.createTextNode(highlight.textContent);
+      parent.replaceChild(textNode, highlight);
+      parent.normalize(); // Merge text nodes
+    });
+
+    sendResponse({ success: true });
     return true;
   }
 });
