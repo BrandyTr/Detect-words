@@ -90,6 +90,12 @@ export default function WordDetector() {
 
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
 
+        // clear previous highlight
+        await chrome.runtime.sendMessage({
+            action: "clearHighlights",
+            tabId: tab.id,
+        })
+
         const res = await chrome.runtime.sendMessage({
             action: "injectAndFind",
             tabId: tab.id,
@@ -184,21 +190,26 @@ export default function WordDetector() {
                         </div>
                     </span>
                 </label>
-                <div className="w-full flex overflow-hidden">
-                    <input
-                        type="text"
-                        placeholder="Eg: banana"
-                        value={word}
-                        onChange={(e) => setWord(e.target.value)}
-                        className="w-[80%] px-[8px] py-[5px] font-normal rounded-tl-[5px] rounded-bl-[5px] border-t-[1.25px] border-l-[1.25px] border-b-[1.25px] border-gray"
-                    />
-                    <button
-                        onClick={handleFindWords}
-                        className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
-                    >
-                        Find
-                    </button>
-                    {(wordCount > 0) && <p>{wordCount} words</p>}
+
+
+                 {/* User input */}
+                <div className="w-full flex flex-col gap-2">
+                    <div className="flex overflow-hidden">
+                        <input
+                            type="text"
+                            placeholder="Eg: banana"
+                            value={word}
+                            onChange={(e) => setWord(e.target.value)}
+                            className="w-[80%] px-[8px] py-[5px] font-normal rounded-tl-[5px] rounded-bl-[5px] border-t-[1.25px] border-l-[1.25px] border-b-[1.25px] border-gray"
+                        />
+                        <button
+                            onClick={handleFindWords}
+                            className="w-[20%] bg-gradient-blueDark text-beggie font-semibold px-[18px] py-[5px] rounded-[5px] border-t-[1.25px] border-r-[1.25px] border-b-[1.25px] border-gray"
+                        >
+                            Find
+                        </button>
+                    </div>
+                    {(wordCount>0)&&<p className="text-primary-darkBlue text-[12px] font-medium">{wordCount} words</p>}
                 </div>
             </div>
 
