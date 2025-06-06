@@ -94,6 +94,40 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     sendResponse({ success: true });
     return true;
   }
+
+  // unhide the word if delete on page List
+  if (request.action === "unhideWord") {
+    console.log("Unhiding word: ", request.word);
+
+    const word = request.word;
+    const regex = new RegExp(`\\b${word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+
+    function walk(node) {
+      if(
+        node.nodeType === 1 &&
+        node.style &&
+        node.style.display === "none"
+      ) {
+        // if node contains word that want to hide
+        if (node.textContent && regex.test(node.textContent)) {
+          node.style.display = ""; // unhide it
+        }
+      } else if (
+        node.nodeType === 1 &&
+        node.childNodes &&
+        !["SCRIPT", "STYLE", "NOSCRIPT"].includes(node.nodeName)
+      ) {
+        for (let i = 0; i < node.childNodes.length;  i++) {
+          walk(node.childNodes[i])
+        }
+      }
+    }
+
+    walk(document.body);
+
+    sendResponse({success:true});
+    return true
+  }
 });
 
 function hideWords(words) {

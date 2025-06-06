@@ -30,7 +30,8 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
     return true; 
-  }  else if (request.action === "clearHighlights") {
+  }  // clear all previous 2lai
+  else if (request.action === "clearHighlights") {
     console.log("Reach clearHighlights");
     chrome.scripting.executeScript({
       target: { tabId: request.tabId },
