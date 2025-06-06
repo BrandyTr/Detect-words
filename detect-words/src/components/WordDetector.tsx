@@ -158,9 +158,16 @@ export default function WordDetector() {
         // update the savedWords state
         setSavedWords((prev) => {
             const updatedWords = prev.filter((item) => item.word !== wordToDelete)
+
+            // update both local & sync storage
             chrome.storage.local.set({ savedWords: updatedWords }, () => {
                 console.log('Updated savedWords in storage:', updatedWords);
             });
+
+            chrome.storage.sync.set({ savedWords_v2: updatedWords}, () => {
+                console.log('Updated savedWords_v2 in storage:', updatedWords)
+            })
+            
             return updatedWords;
         });
 
