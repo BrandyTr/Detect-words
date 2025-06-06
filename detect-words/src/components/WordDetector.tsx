@@ -71,15 +71,21 @@ export default function WordDetector() {
     };
 
     const handleHideWords = async () => {
-        const allWords = savedWords.flatMap(w => [w.word, ...w.variants]);
-        if (allWords.length === 0) return;
-
         const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+
+        const savedWordsList = savedWords.flatMap(w => [w.word, ...w.variants]);
+        const wordsToHide = [...savedWordsList];
+        
+        if(word.trim()) {
+            wordsToHide.push(word.trim()) //add current word
+        }
+
+        if (wordsToHide.length === 0) return;
 
         chrome.runtime.sendMessage({
             action: "injectAndHide",
             tabId: tab.id,
-            words: allWords
+            words: wordsToHide
         });
 
         setStatusMessage("Hide successfully!");
@@ -167,7 +173,7 @@ export default function WordDetector() {
             chrome.storage.sync.set({ savedWords_v2: updatedWords}, () => {
                 console.log('Updated savedWords_v2 in storage:', updatedWords)
             })
-            
+
             return updatedWords;
         });
 
@@ -254,7 +260,7 @@ export default function WordDetector() {
 
             {/* Frame Generate */}
             {showGenerated && (
-                <div className="bg-gradient-blue max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto px-4 py-4 rounded-[5px] shadow-md mx-auto">
+                <div className="max-w-[600px] min-w-[450px] min-h-[255px] max-h-[450px] overflow-y-auto rounded-[5px] mt-4 mx-auto">
                     <hr className="border-gray-300 mb-3" />
                     <div className="font-semibold text-[16px] text-black mb-2">Generated words</div>
 
