@@ -32,6 +32,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return true; 
   }
 
+  // clear all previous 2lai
   else if (request.action === "clearHighlights") {
     console.log("Reach clearHighlights");
     chrome.scripting.executeScript({
@@ -45,5 +46,22 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       });
     });
     return true;
+  }
+
+  // unhide word if word is deleted on List page
+  else if (request.action === "unhideWord") {
+    console.log("Reach unhideWord");
+    chrome.scripting.executeScript({
+      target: {tabId: request.tabId},
+      files: ["content.js"]
+    }, () => {
+      chrome.tabs.sendMessage(request.tabId, {
+        action: "unhideWord",
+        word: request.word
+      }, () => {
+        sendResponse({success: true})
+      })
+    })
+    return true
   }
 });

@@ -153,8 +153,17 @@ export default function WordDetector() {
 
     const handleBack = () => setMode("main");
 
-    const handleDeleteWord = (wordToDelete: string) => {
+    const handleDeleteWord = async (wordToDelete: string) => {
+        // update the savedWords state
         setSavedWords((prev) => prev.filter((item) => item.word !== wordToDelete));
+
+        // send message to content script to unhide the delete word
+        const [tab] = await chrome.tabs.query({ active: true, currentWindow: true});
+        chrome.runtime.sendMessage({
+            action: "unhideWord",
+            tabId: tab.id,
+            word: wordToDelete
+        })
     };
 
     if (mode === "list") {
