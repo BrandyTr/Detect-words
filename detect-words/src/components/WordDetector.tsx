@@ -29,7 +29,7 @@ export default function WordDetector() {
     const [generatedWords, setGeneratedWords] = useState<string[]>([]);
     const [mode, setMode] = useState<"main" | "list">("main");
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
-    const [wordCount,setWordCount]=useState<number>(0)
+    const [wordCount, setWordCount] = useState<number>(0)
 
     useEffect(() => {
         const stored = localStorage.getItem("savedWords_v2");
@@ -41,12 +41,13 @@ export default function WordDetector() {
     useEffect(() => {
         if (savedWords.length > 0) {
             localStorage.setItem("savedWords_v2", JSON.stringify(savedWords));
+            chrome.storage.sync.set({ savedWords_v2: savedWords });
         }
     }, [savedWords]);
 
     // auto-disappear statusMesage after 3s
     useEffect(() => {
-        if(statusMessage) {
+        if (statusMessage) {
             const timer = setTimeout(() => {
                 setStatusMessage(null)
             }, 2000);
@@ -148,7 +149,14 @@ export default function WordDetector() {
     const handleBack = () => setMode("main");
 
     const handleDeleteWord = (wordToDelete: string) => {
-        setSavedWords((prev) => prev.filter((item) => item.word !== wordToDelete));
+        setSavedWords((prev) => {
+            const updatedWords = prev.filter((item) => item.word !== wordToDelete)
+            chrome.storage.sync.set({ savedWords_v2: updatedWords });
+                    document.querySelectorAll('[data-original-display]').forEach((el) => {
+              const htmlEl = el as HTMLElement; 
+  htmlEl.style.display = htmlEl.dataset.originalDisplay || '';
+        });
+        });
     };
 
     if (mode === "list") {
@@ -182,7 +190,7 @@ export default function WordDetector() {
                     >
                         Find
                     </button>
-                    {(wordCount>0)&&<p>{wordCount} words</p>}
+                    {(wordCount > 0) && <p>{wordCount} words</p>}
                 </div>
             </div>
 
