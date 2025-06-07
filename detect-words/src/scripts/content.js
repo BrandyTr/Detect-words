@@ -1,3 +1,4 @@
+let isFinding = false;
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log("Reach content.js");
   console.log({ request, words: request.words });
@@ -13,6 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     const regex = new RegExp(`\\b(${escapedWords.join("|")})\\b`, "gi");
 
     function walk(node) {
+        if (isFinding) return;
       if (node.nodeType === 3) {
         const matches = node.textContent.match(regex);
         if (matches) {
@@ -72,8 +74,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         }
       }
     }
-
+    isFinding = true;
     walk(document.body);
+    isFinding = false;
     console.log({ count });
     sendResponse({ count });
     return true;
@@ -137,6 +140,7 @@ function hideWords(words) {
   const regex = new RegExp(`\\b(${escapedWords.join("|")})\\b`, "gi");
 
   function walk(node) {
+      if (isFinding) return;
     if (node.nodeType === 3) {
       const matches = node.textContent.match(regex);
       if (matches) {
