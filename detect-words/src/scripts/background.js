@@ -3,6 +3,7 @@ chrome.runtime.onInstalled.addListener(() => {
 });
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      console.log("Reach injectandHind")
   if (request.action === "injectAndHide") {
     chrome.scripting.executeScript({
       target: { tabId: request.tabId },

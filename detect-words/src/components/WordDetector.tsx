@@ -28,19 +28,17 @@ export default function WordDetector() {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [wordCount, setWordCount] = useState<number>(0);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("savedWords_v2");
-    if (stored) {
-      setSavedWords(JSON.parse(stored));
+useEffect(() => {
+  chrome.storage.sync.get("savedWords_v2", (data) => {
+    if (data.savedWords_v2) {
+      setSavedWords(data.savedWords_v2);
     }
-  }, []);
+  });
+}, []);
 
-  useEffect(() => {
-    if (savedWords.length > 0) {
-      localStorage.setItem("savedWords_v2", JSON.stringify(savedWords));
-      chrome.storage.sync.set({ savedWords_v2: savedWords });
-    }
-  }, [savedWords]);
+useEffect(() => {
+  chrome.storage.sync.set({ savedWords_v2: savedWords });
+}, [savedWords]);
 
   useEffect(() => {
     if (statusMessage) {
@@ -80,7 +78,8 @@ export default function WordDetector() {
     setStatusMessage("Hide successfully!");
   };
 
-  const handleFindWords = async () => {
+  const handleFindWords = async (e: React.MouseEvent) => {
+      e.preventDefault();
     const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
     await chrome.runtime.sendMessage({ action: "clearHighlights", tabId: tab.id });
     const res = await chrome.runtime.sendMessage({
@@ -144,8 +143,8 @@ export default function WordDetector() {
       }
     }
 
-    chrome.storage.local.set({ savedWords: updatedWords });
     chrome.storage.sync.set({ savedWords_v2: updatedWords });
+    setWord("");
 
     return updatedWords;
   });
@@ -172,9 +171,8 @@ export default function WordDetector() {
         return item;
       });
 
-      chrome.storage.local.set({ savedWords: updatedWords });
       chrome.storage.sync.set({ savedWords_v2: updatedWords });
-
+      setWord("");
       return updatedWords;
     });
 
